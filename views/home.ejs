@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="/js/main.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+       
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+</head>
+
+<body>
+    <h1>URL Shortener</h1>
+    <div class="url-container">
+        <form action="/url" method="post">
+            <label for="url-input">Enter your original URL</label>
+            <input type="text" id="url-input" name="url" placeholder="https://example.com" required>
+            <button type="submit">Shorten</button>
+        </form>
+        <% if (locals.id) { %>
+            <p>URL Generated: http://localhost:8080/url/<%= id %></p>
+        <% } %>
+    </div>
+</body>
+</html>
