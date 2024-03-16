@@ -1,10 +1,14 @@
 const express = require('express');
-const urlRoute = require('./routes/url');
+const cookieParser = require("cookie-parser");
 const connect = require('./connection');
 const URL = require('./models/url');
 const path = require('path');
-const staticRoute = require('./routes/static');
+const {checkAuth,restrictToLoggedinUserOnly} = require('./middlewares/auth');
 
+
+const urlRoute = require('./routes/url');
+const staticRoute = require('./routes/static');
+const userRoute = require('./routes/user'); 
 const app = express();
 
 const port = 8080;
@@ -21,15 +25,17 @@ app.use(express.static(path.join(__dirname , 'public')));
 // Parse URL-encoded and JSON request bodies
 app.use(express.urlencoded( { extended: false }));
 app.use(express.json());
+app.use(cookieParser());
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 
 
 // Handle POST requests to generate short URLs
-app.use('/', staticRoute);
-
-app.use('/url', urlRoute);
+app.use('/',checkAuth, staticRoute);
+app.use('/user', userRoute);
+app.use('/url',restrictToLoggedinUserOnly, urlRoute);
 app.use('/url/:shortId', urlRoute);
 
 // Start the server
